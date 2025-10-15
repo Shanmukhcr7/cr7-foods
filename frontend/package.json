@@ -2,13 +2,13 @@
   "name": "cr7-foods-frontend",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --configuration production",
-    "build:prod": "npx ng build --configuration production",
-    "watch": "ng watch",
-    "test": "ng test"
-  },
+  "ng": "ng",
+  "start": "npx serve -s dist/cr7-foods-frontend -l $PORT",
+  "build": "ng build --configuration production",
+  "build:prod": "npx ng build --configuration production",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.0.0",
@@ -51,6 +51,7 @@
     "autoprefixer": "^10.4.16"
   }
 }
+
 
 
 
