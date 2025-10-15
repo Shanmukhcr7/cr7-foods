@@ -14,9 +14,15 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://localhost:3000'],
-  credentials: true
+  origin: [
+    'http://localhost:4200',
+    'http://localhost:3000',
+    'https://cr7-foods-1.onrender.com',  // frontend on Render
+    'https://cr7-foods.onrender.com'     // backend domain (if needed)
+  ],
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -64,3 +70,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
