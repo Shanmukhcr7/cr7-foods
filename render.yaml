@@ -12,8 +12,11 @@ services:
       - key: JWT_SECRET
         value: cr7secret
 
-  - type: static_site
+  - type: web
     name: cr7-foods-frontend
+    runtime: node
     buildCommand: npm run build:prod
-    staticSiteOptions:
-      distDir: dist
+    startCommand: npx serve -s dist -p $PORT
+    envVars:
+      - key: NODE_ENV
+        value: production
