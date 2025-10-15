@@ -267,7 +267,7 @@ export class MenuComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get('http://localhost:5000/api/foods').subscribe({
+    this.http.get('https://cr7-foods.onrender.com/api/foods').subscribe({
       next: (response: any) => {
         console.log('Menu API response:', response);
         // Handle different response formats

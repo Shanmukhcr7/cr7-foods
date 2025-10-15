@@ -63,7 +63,7 @@ export class RegisterComponent {
       address: this.registerData.address
     };
 
-    this.http.post('http://localhost:5000/api/user/register', userData).subscribe({
+    this.http.post('https://cr7-foods.onrender.com/api/user/register', userData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         console.log('Registration successful:', response);

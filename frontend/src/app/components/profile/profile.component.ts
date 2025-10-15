@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     };
 
-    this.http.get('http://localhost:5000/api/user/profile', { headers }).subscribe({
+    this.http.get('https://cr7-foods.onrender.com/api/user/profile', { headers }).subscribe({
       next: (response: any) => {
         console.log('Profile loaded:', response);
         if (response.user) {
@@ -85,7 +85,7 @@ export class ProfileComponent implements OnInit {
       'Content-Type': 'application/json'
     };
 
-    this.http.put('http://localhost:5000/api/user/profile', this.profileData, { headers }).subscribe({
+    this.http.put('https://cr7-foods.onrender.com/api/user/profile', this.profileData, { headers }).subscribe({
       next: (response: any) => {
         console.log('Profile updated:', response);
         this.successMessage = 'Profile updated successfully!';

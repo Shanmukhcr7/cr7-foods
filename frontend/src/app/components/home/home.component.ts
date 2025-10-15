@@ -196,7 +196,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadFeaturedFoods() {
     this.isLoading = true;
-    this.http.get('http://localhost:5000/api/foods').subscribe({
+    this.http.get('https://cr7-foods.onrender.com/api/foods').subscribe({
       next: (response: any) => {
         console.log('Home featured foods response:', response);
         const foodsArray = response.foods || response || [];

@@ -38,7 +38,7 @@ export class AdminLoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.http.post<any>('http://localhost:5000/api/admin/login', this.loginData).subscribe({
+    this.http.post<any>('https://cr7-foods.onrender.com/api/admin/login', this.loginData).subscribe({
       next: (response) => {
         this.isLoading = false;
 

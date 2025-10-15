@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit {
 
   loadDashboardStats() {
     const token = localStorage.getItem('adminToken');
-    this.http.get('http://localhost:5000/api/admin/dashboard', {
+    this.http.get('https://cr7-foods.onrender.com/api/admin/dashboard', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadUsers() {
-    this.http.get<any[]>('http://localhost:5000/api/users').subscribe({
+    this.http.get<any[]>('https://cr7-foods.onrender.com/api/users').subscribe({
       next: (users) => {
         this.totalUsers = users.length;
       },
@@ -197,7 +197,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadFoods() {
-    this.http.get<any[]>('http://localhost:5000/api/foods').subscribe({
+    this.http.get<any[]>('https://cr7-foods.onrender.com/api/foods').subscribe({
       next: (foods) => {
         this.totalFoods = foods.length;
       },

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrdersService {
-  private baseUrl = 'http://localhost:5000/api';
+  private baseUrl = 'https://cr7-foods.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

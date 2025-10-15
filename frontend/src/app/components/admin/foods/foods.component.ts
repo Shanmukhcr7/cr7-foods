@@ -43,7 +43,7 @@ export class FoodsComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get('http://localhost:5000/api/foods').subscribe({
+    this.http.get('https://cr7-foods.onrender.com/api/foods').subscribe({
       next: (response: any) => {
         console.log('Foods API response:', response);
         // Handle different response formats
@@ -75,7 +75,7 @@ export class FoodsComponent implements OnInit {
         'Authorization': `Bearer ${token}`
       };
 
-      this.http.delete(`http://localhost:5000/api/foods/${foodId}`, { headers }).subscribe({
+      this.http.delete(`https://cr7-foods.onrender.com/api/foods/${foodId}`, { headers }).subscribe({
         next: (response) => {
           console.log('Food deleted successfully:', response);
           alert('Food item deleted successfully!');
@@ -99,7 +99,7 @@ export class FoodsComponent implements OnInit {
 
     if (this.showEditModal) {
       // Update existing food
-      this.http.put(`http://localhost:5000/api/foods/${this.currentFood._id}`, this.currentFood, { headers }).subscribe({
+      this.http.put(`https://cr7-foods.onrender.com/api/foods/${this.currentFood._id}`, this.currentFood, { headers }).subscribe({
         next: (response) => {
           console.log('Food updated successfully:', response);
           alert('Food item updated successfully!');
@@ -113,7 +113,7 @@ export class FoodsComponent implements OnInit {
       });
     } else {
       // Add new food
-      this.http.post('http://localhost:5000/api/foods', this.currentFood, { headers }).subscribe({
+      this.http.post('https://cr7-foods.onrender.com/api/foods', this.currentFood, { headers }).subscribe({
         next: (response) => {
           console.log('Food added successfully:', response);
           alert('Food item added successfully!');

@@ -37,7 +37,7 @@ export class LoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.http.post('http://localhost:5000/api/user/login', this.loginData).subscribe({
+    this.http.post('https://cr7-foods.onrender.com/api/user/login', this.loginData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         console.log('Login successful:', response);
