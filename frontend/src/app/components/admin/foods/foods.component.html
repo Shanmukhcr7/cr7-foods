@@ -1,0 +1,240 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <!-- Admin Navigation -->
+  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-red-600/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="text-2xl font-bold text-gradient">CR7 FOODS ADMIN</div>
+        <div class="flex items-center space-x-6">
+          <div class="hidden md:flex space-x-6">
+            <a href="/admin/dashboard" class="hover:text-red-600 transition-colors">Dashboard</a>
+            <a href="/admin/orders" class="hover:text-red-600 transition-colors">Orders</a>
+            <a href="/admin/foods" class="text-red-600 font-semibold">Foods</a>
+          </div>
+          <button
+            (click)="logout()"
+            class="btn-secondary text-sm px-4 py-2"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Foods Management Header -->
+  <section class="pt-24 pb-12 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-4">
+            Manage Food Items
+          </h1>
+          <p class="text-xl text-gray-300">
+            Add, edit, and manage your restaurant's menu items
+          </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <button
+            (click)="showAddModal = true"
+            class="btn-primary px-6 py-3"
+          >
+            <i class="fas fa-plus mr-2"></i>
+            Add New Food Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Food Items Table -->
+  <section class="pb-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="bg-gray-800 rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Image</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Category</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Price</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+              <tr *ngFor="let food of foods; trackBy: trackByFoodId" class="hover:bg-gray-750">
+                <td class="px-6 py-4">
+                  <img
+                    [src]="food.imageUrl || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100'"
+                    [alt]="food.name"
+                    class="w-16 h-16 object-cover rounded-lg"
+                  >
+                </td>
+                <td class="px-6 py-4">
+                  <div>
+                    <div class="font-semibold">{{ food.name }}</div>
+                    <div class="text-sm text-gray-400">{{ food.description }}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 bg-red-600/20 text-red-600 rounded-full text-sm">
+                    {{ food.category }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 font-semibold">₹{{ food.price }}</td>
+                <td class="px-6 py-4">
+                  <span
+                    class="px-3 py-1 rounded-full text-sm"
+                    [class]="food.available ? 'bg-green-600/20 text-green-600' : 'bg-gray-600/20 text-gray-600'"
+                  >
+                    {{ food.available ? 'Available' : 'Unavailable' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex space-x-2">
+                    <button
+                      (click)="editFood(food)"
+                      class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      (click)="deleteFood(food._id)"
+                      class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="text-center py-20">
+          <i class="fas fa-spinner fa-spin text-4xl text-gray-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Loading food items...</h3>
+          <p class="text-gray-400">Please wait while we fetch your menu items</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && foods.length === 0" class="text-center py-20">
+          <i class="fas fa-utensils text-6xl text-gray-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">No food items found</h3>
+          <p class="text-gray-400 mb-6">Start by adding your first menu item</p>
+          <button
+            (click)="showAddModal = true"
+            class="btn-primary"
+          >
+            Add First Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add/Edit Food Modal -->
+  <div *ngIf="showAddModal || showEditModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full">
+      <h2 class="text-2xl font-bold mb-6">
+        {{ showEditModal ? 'Edit Food Item' : 'Add New Food Item' }}
+      </h2>
+
+      <form (ngSubmit)="saveFood()" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">Name</label>
+          <input
+            type="text"
+            [(ngModel)]="currentFood.name"
+            name="foodName"
+            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-600"
+            placeholder="Food name"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-2">Description</label>
+          <textarea
+            [(ngModel)]="currentFood.description"
+            name="foodDescription"
+            rows="3"
+            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-600"
+            placeholder="Food description"
+            required
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Price</label>
+            <input
+              type="number"
+              [(ngModel)]="currentFood.price"
+              name="foodPrice"
+              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-600"
+              placeholder="0"
+              step="0.01"
+              required
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Category</label>
+            <select
+              [(ngModel)]="currentFood.category"
+              name="foodCategory"
+              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-red-600"
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Starters">Starters</option>
+              <option value="Main Course">Main Course</option>
+              <option value="Desserts">Desserts</option>
+              <option value="Beverages">Beverages</option>
+              <option value="Pizza">Pizza</option>
+              <option value="Burger">Burger</option>
+              <option value="Pasta">Pasta</option>
+              <option value="Salad">Salad</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-2">Image URL</label>
+          <input
+            type="url"
+            [(ngModel)]="currentFood.imageUrl"
+            name="foodImageUrl"
+            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-600"
+            placeholder="https://example.com/image.jpg"
+          >
+        </div>
+
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            [(ngModel)]="currentFood.available"
+            name="foodAvailable"
+            class="mr-3 text-red-600 focus:ring-red-600"
+          >
+          <label class="text-sm">Available for ordering</label>
+        </div>
+
+        <div class="flex space-x-4">
+          <button type="submit" class="btn-primary flex-1">
+            {{ showEditModal ? 'Update Item' : 'Add Item' }}
+          </button>
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="btn-secondary flex-1"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

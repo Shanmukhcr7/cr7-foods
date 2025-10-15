@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cr7-foods-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        value: mongodb+srv://23EG106B62:shanmukh123@cluster0.pelosap.mongodb.net/cr7foods
+      - key: JWT_SECRET
+        value: cr7secret
+
+  - type: static_site
+    name: cr7-foods-frontend
+    buildCommand: npm run build:prod
+    staticSiteOptions:
+      distDir: dist

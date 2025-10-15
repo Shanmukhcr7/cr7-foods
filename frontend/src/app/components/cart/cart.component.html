@@ -1,0 +1,244 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-red-600/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="text-2xl font-bold text-gradient">CR7 FOODS</div>
+        <div class="hidden md:flex space-x-8">
+          <a href="/home" class="hover:text-red-600 transition-colors">Home</a>
+          <a href="/menu" class="hover:text-red-600 transition-colors">Menu</a>
+          <a href="/about" class="hover:text-red-600 transition-colors">About</a>
+          <a href="/contact" class="hover:text-red-600 transition-colors">Contact</a>
+        </div>
+        <div class="flex space-x-4 items-center">
+          <!-- Show cart if logged in -->
+          <a routerLink="/cart" class="btn-secondary text-sm px-4 py-2 mr-2" *ngIf="isLoggedIn()">
+            <i class="fas fa-shopping-cart mr-1"></i>
+            Cart
+          </a>
+          <!-- User menu if logged in -->
+          <div class="relative" *ngIf="isLoggedIn()">
+            <button
+              (click)="toggleUserMenu()"
+              class="flex items-center space-x-2 btn-secondary text-sm px-4 py-2"
+            >
+              <i class="fas fa-user"></i>
+              <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+            <div
+              *ngIf="showUserMenu"
+              class="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg"
+            >
+              <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-700">My Profile</a>
+              <a routerLink="/orders" class="block px-4 py-2 hover:bg-gray-700">My Orders</a>
+              <button
+                (click)="logout()"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-700"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          <!-- Login/Register if not logged in -->
+          <div *ngIf="!isLoggedIn()">
+            <a routerLink="/login" class="btn-outline text-sm px-4 py-2">Sign In</a>
+            <a routerLink="/register" class="btn-primary text-sm px-4 py-2 ml-2">Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Cart Header -->
+  <section class="pt-24 pb-12 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-4">
+        Your Shopping Cart
+      </h1>
+      <p class="text-xl text-gray-300">
+        Review your items before proceeding to checkout
+      </p>
+    </div>
+  </section>
+
+  <!-- Cart Content -->
+  <section class="pb-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Empty Cart State -->
+      <div *ngIf="cart.length === 0" class="text-center py-20">
+        <div class="max-w-md mx-auto">
+          <i class="fas fa-shopping-cart text-6xl text-gray-600 mb-6"></i>
+          <h2 class="text-3xl font-bold mb-4">Your cart is empty</h2>
+          <p class="text-gray-400 mb-8">
+            Looks like you haven't added any items to your cart yet.
+            Browse our menu and add some delicious items!
+          </p>
+          <button
+            (click)="continueShopping()"
+            class="btn-primary px-8 py-4 text-lg"
+          >
+            <i class="fas fa-utensils mr-2"></i>
+            Browse Menu
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart Items -->
+      <div *ngIf="cart.length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items List -->
+        <div class="lg:col-span-2">
+          <div class="bg-gray-800 rounded-xl overflow-hidden">
+            <!-- Cart Header -->
+            <div class="bg-gray-700 px-6 py-4">
+              <h2 class="text-xl font-bold">Cart Items ({{ getTotalItems() }})</h2>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="divide-y divide-gray-700">
+              <div *ngFor="let item of cart; trackBy: trackByCartItem" class="p-6">
+                <div class="flex items-center space-x-4">
+                  <!-- Item Image -->
+                  <div class="flex-shrink-0">
+                    <img
+                      [src]="item.imageUrl || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100'"
+                      [alt]="item.name"
+                      class="w-20 h-20 object-cover rounded-lg"
+                    >
+                  </div>
+
+                  <!-- Item Details -->
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold mb-1">{{ item.name }}</h3>
+                    <p class="text-gray-400 text-sm">₹{{ item.price }}</p>
+                  </div>
+
+                  <!-- Quantity Controls -->
+                  <div class="flex items-center space-x-3">
+                    <button
+                      (click)="updateQuantity(item, item.quantity - 1)"
+                      class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-colors"
+                    >
+                      <i class="fas fa-minus text-sm"></i>
+                    </button>
+                    <span class="w-12 text-center font-semibold">{{ item.quantity }}</span>
+                    <button
+                      (click)="updateQuantity(item, item.quantity + 1)"
+                      class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-colors"
+                    >
+                      <i class="fas fa-plus text-sm"></i>
+                    </button>
+                  </div>
+
+                  <!-- Item Total & Remove -->
+                  <div class="flex flex-col items-end space-y-2">
+                    <div class="font-semibold">₹{{ item.price * item.quantity }}</div>
+                    <button
+                      (click)="removeItem(item)"
+                      class="text-red-600 hover:text-red-500 transition-colors"
+                    >
+                      <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clear Cart -->
+            <div class="px-6 py-4 bg-gray-700 border-t border-gray-600">
+              <button
+                (click)="clearCart()"
+                class="text-red-600 hover:text-red-500 transition-colors"
+              >
+                <i class="fas fa-trash-alt mr-1"></i>
+                Clear Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+
+            <!-- Order Details -->
+            <div class="space-y-4 mb-6">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-400">Total Items:</span>
+                <span class="font-semibold">{{ getTotalItems() }}</span>
+              </div>
+              <div class="flex justify-between items-center text-lg">
+                <span class="text-gray-400">Total Amount:</span>
+                <span class="font-bold text-red-600">₹{{ getTotalPrice() }}</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+              <button
+                (click)="proceedToCheckout()"
+                [disabled]="cart.length === 0"
+                class="w-full btn-primary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <i class="fas fa-credit-card mr-2"></i>
+                Proceed to Checkout
+              </button>
+
+              <button
+                (click)="continueShopping()"
+                class="w-full btn-outline py-3 text-lg"
+              >
+                <i class="fas fa-arrow-left mr-2"></i>
+                Continue Shopping
+              </button>
+            </div>
+
+            <!-- Login Required Notice -->
+            <div *ngIf="!isLoggedIn" class="mt-6 p-4 bg-yellow-600/20 border border-yellow-600 rounded-lg">
+              <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+                <div class="text-sm">
+                  <p class="font-semibold text-yellow-600">Login Required</p>
+                  <p class="text-gray-300">Please login to proceed with checkout</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delivery Info -->
+            <div class="mt-6 p-4 bg-green-600/20 border border-green-600 rounded-lg">
+              <div class="flex items-center">
+                <i class="fas fa-shipping-fast text-green-600 mr-3"></i>
+                <div class="text-sm">
+                  <p class="font-semibold text-green-600">Free Delivery</p>
+                  <p class="text-gray-300">Available in 30 minutes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black py-12 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="text-3xl font-bold text-gradient mb-4">CR7 FOODS</div>
+      <p class="text-gray-400 mb-6">Delivering happiness, one meal at a time</p>
+      <div class="flex justify-center space-x-6">
+        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors">
+          <i class="fab fa-facebook text-2xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors">
+          <i class="fab fa-instagram text-2xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors">
+          <i class="fab fa-twitter text-2xl"></i>
+        </a>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-gray-500">
+        <p>&copy; 2024 CR7 Foods. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>

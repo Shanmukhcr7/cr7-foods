@@ -1,0 +1,15 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="card hover-lift" *ngFor="let item of featuredFoods; trackBy: trackByFoodId">
+              <div class="relative mb-4">
+                <img [src]="item.imageUrl || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400'" [alt]="item.name" class="w-full h-48 object-cover rounded-lg">
+                <div class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm">
+                  ₹{{item.price}}
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">{{item.name}}</h3>
+              <p class="text-gray-400 mb-4">{{item.description}}</p>
+              <button class="btn-primary text-sm w-full">
+                Add to Cart
+              </button>
+            </div>
+          </div>
